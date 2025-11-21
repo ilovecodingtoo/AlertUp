@@ -1,0 +1,23 @@
+<h3 style="font-weight: bold;">Impostazioni</h3><br>
+<div *ngIf="userLoggedIn()" class="w3-display-container" style="margin-left: -16px; margin-right: -16px; height: 50px; border-top: 1px solid lightgray;" (click)="goToAccountSettings()">
+  <span class="w3-display-left w3-padding-large" style="font-weight: bold; font-size: 14px;">Account</span>
+  <span class="fas fa-angle-right w3-large w3-display-right w3-padding-large"></span>
+</div>
+<div class="w3-display-container" style="margin-left: -16px; margin-right: -16px; height: 145px; border-top: 1px solid lightgray;">
+  <div class="w3-display-container" style="height: 50px; width: 100%;">
+    <span class="w3-display-left w3-padding-large" style="font-weight: bold; font-size: 14px;">Permessi</span>
+  </div>
+  <div class="w3-display-container" style="height: 40px; width: 100%;">
+    <span class="w3-display-left w3-padding-large" style="font-size: 12px;">Posizione</span>
+    <mat-slide-toggle #locationToggle class="w3-display-right w3-padding-large" [checked]="location.locationAccessAllowed" (toggleChange)="toggleLocationAccess()"></mat-slide-toggle>
+  </div>
+  <div class="w3-display-container" style="height: 40px; width: 100%;">
+    <span class="w3-display-left w3-padding-large" style="font-size: 12px;">Notifiche Push</span>
+    <mat-slide-toggle #pushToggle class="w3-display-right w3-padding-large" [checked]="push.pushNotificationsAllowed" (toggleChange)="togglePushNotifications()"></mat-slide-toggle>
+  </div>
+  <div style="height: 15px;"></div>
+</div>
+<div class="w3-display-container" style="margin-left: -16px; margin-right: -16px; height: 51px; border-top: 1px solid lightgray; border-bottom: 1px solid lightgray;" (click)="goToTermsAndConditions()">
+  <span class="w3-display-left w3-padding-large" style="font-weight: bold; font-size: 14px;">Termini e Condizioni</span>
+  <span class="fas fa-angle-right w3-large w3-display-right w3-padding-large"></span>
+</div>

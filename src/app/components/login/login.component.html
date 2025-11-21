@@ -1,0 +1,21 @@
+<h3 style="font-weight: bold;">Accedi</h3><br>
+<form [formGroup]="form" (ngSubmit)="onSubmit()">
+    <mat-form-field>
+      <mat-label>Email</mat-label>
+      <input matInput formControlName="email" type="email" placeholder="Inserisci la tua email">
+      <mat-error *ngIf="form.get('email')?.hasError('required')">Email richiesta</mat-error>
+      <mat-error *ngIf="form.get('email')?.hasError('email')">Email invalida</mat-error>
+      <mat-error *ngIf="form.get('email')?.hasError('InvalidEmail')">Email non registrata</mat-error>
+    </mat-form-field>
+    <br><br>
+    <mat-form-field>
+      <mat-label>Password</mat-label>
+      <input matInput formControlName="password" type="password" placeholder="Inserisci la tua password">
+      <mat-error *ngIf="form.get('password')?.hasError('required')">Password richiesta</mat-error>
+      <mat-error *ngIf="form.get('password')?.hasError('InvalidPassword')">Password errata</mat-error>
+    </mat-form-field>
+    <br><br>
+    <button class="w3-button w3-round-large w3-green" style="outline: none; border: none;" type="submit" [disabled]="form.invalid">Accedi</button>
+</form>
+<br>
+<p>Non hai ancora un account? <a routerLink="/signup" style="color: #0066cc">Registrati</a>.</p><br>

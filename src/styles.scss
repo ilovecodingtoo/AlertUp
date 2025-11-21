@@ -1,0 +1,23 @@
+@use '@angular/material' as mat;
+
+:root {
+  @include mat.slide-toggle-overrides((
+    selected-focus-track-color: #4CAF50,
+    selected-hover-track-color: #4CAF50,
+    selected-pressed-track-color: #4CAF50,
+    selected-track-color: #4CAF50,
+    selected-icon-color: #4CAF50
+  ));
+  @include mat.checkbox-overrides((
+    selected-focus-icon-color: #4CAF50,
+    selected-hover-icon-color: #4CAF50,
+    selected-icon-color: #4CAF50,
+    selected-pressed-icon-color: #4CAF50
+  ));
+  @include mat.radio-overrides((
+    selected-focus-icon-color: #4CAF50,
+    selected-hover-icon-color: #4CAF50,
+    selected-icon-color: #4CAF50,
+    selected-pressed-icon-color: #4CAF50,
+  ));
+}

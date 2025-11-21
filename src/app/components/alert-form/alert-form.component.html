@@ -1,0 +1,65 @@
+<div *ngIf="!locationAccessAllowed()">
+  <div class="w3-display-middle">
+    <h2>Oops!</h2>
+    <p>Per utilizzare questo servizio dovresti attivare la geolocalizzazione nelle <a routerLink="/general-settings" style="color: #0066cc">Impostazioni</a>.</p>
+  </div>
+</div>
+<div *ngIf="locationAccessAllowed()">
+  <h3 style="font-weight: bold;">Segnala emergenza</h3><br>
+  <div *ngIf="showDisclaimer" class="w3-display-container" style="margin-left: -16px; margin-right: -16px; height: 180px;">
+    <div class="w3-display-topmiddle w3-display-container w3-yellow w3-border" style="width: 250px; height: 145px;">
+      <span (click)="showDisclaimer = false;" class="w3-button w3-hover-yellow w3-large w3-display-topright">&times;</span>
+      <h4 style="color: red; font-weight: bold;">⚠️Disclaimer</h4>
+      <small><p>In caso di grave pericolo o<br> necessità di soccorso immediato:</p></small>
+      <p><span class='fas fa-phone-alt'></span>&nbsp;<a href="tel:112"style="font-weight: bold;">chiama il 112</a>&nbsp;<span class='fas fa-phone-alt'></span></p>
+    </div>
+  </div>
+  <form [formGroup]="form" (ngSubmit)="onSubmit()">
+    <div style="text-align: left; display: inline-block;">
+      <mat-label>
+        Tipo di emergenza
+        <svg style="width: 1.2em; height: 1.2em; vertical-align: middle;" viewBox="0 0 16 16" (click)="openTypeDialog()">
+          <circle cx="8" cy="8" r="7" fill="none" stroke="currentColor" stroke-width="1"/>
+          <text x="8" y="11" text-anchor="middle" fill="currentColor" font-size="10" font-weight="bold">i</text>
+        </svg>
+      </mat-label><br>
+      <mat-radio-group formControlName="type" class="w3-margin-top">
+        <mat-radio-button value="fire" selected><span class='fas fa-fire w3-large' style="color: red;"></span></mat-radio-button><br>
+        <mat-radio-button value="water"><span class='fas fa-tint w3-large' style="color: rgb(0, 115, 255);"></span></mat-radio-button><br>
+        <mat-radio-button value="air"><span class='fas fa-wind w3-large' style="color: rgb(151, 151, 151);"></span></mat-radio-button><br>
+        <mat-radio-button value="ice"><span class='far fa-snowflake w3-large' style="color: aqua;"></span></mat-radio-button><br>
+        <mat-radio-button value="soil"><span class='fas fa-house-damage w3-large' style="color: #8d4f26ff;"></span></mat-radio-button>
+      </mat-radio-group>
+    </div>
+    <br><br>
+    <mat-form-field>
+      <mat-label>Titolo</mat-label>
+      <input matInput formControlName="title" type="text" placeholder="Inserisci un titolo">
+      <mat-error *ngIf="form.get('title')?.hasError('required')">Titolo richiesto</mat-error>
+      <mat-error *ngIf="form.get('title')?.hasError('maxlength')">Titolo troppo lungo</mat-error>
+    </mat-form-field>
+    <br><br>
+    <mat-form-field>
+      <mat-label>Descrizione</mat-label>
+      <textarea matInput formControlName="description" rows="4" placeholder="Descrivi in dettaglio l'emergenza e suggerisci come evitarla"></textarea>
+      <mat-error *ngIf="form.get('description')?.hasError('required')">Descrizione richiesta</mat-error>
+    </mat-form-field>
+    <br><br>
+    <div class="w3-display-container" style="height: 87vw; width: 100%;">
+      <google-map class="w3-display-middle" *ngIf="center" #mapRef height="87vw" width="87vw" [center]="center" [zoom]="15" [options]="{ disableDefaultUI: true, gestureHandling: 'greedy' }" (mapClick)="onMapClick()">
+        <map-marker #newAlert="mapMarker" [position]="center" [icon]="form.get('type')?.value==='fire'?'fire.png':form.get('type')?.value==='water'?'water.png':form.get('type')?.value==='air'?'air.png':form.get('type')?.value==='ice'?'ice.png':'soil.png'" (mapClick)="openInfoWindow(newAlert)">
+        </map-marker>
+        <map-info-window>
+          <div style="color: black; text-align: left;">
+            <em>{{ made_by }}</em> segnala:
+            <h6 style="font-weight: bold;">{{ form.get('title')?.value }}</h6>
+            <p>{{ form.get('description')?.value }}</p>
+          </div>
+        </map-info-window>
+      </google-map>
+    </div>
+    <br><br>
+    <button class="w3-button w3-round-large w3-green" style="outline: none; border: none;" type="submit" [disabled]="form.invalid">Invia</button>
+    <br><br><br>
+  </form>
+</div>

@@ -1,0 +1,38 @@
+<h3 style="font-weight: bold;">Registrati</h3><br>
+<form [formGroup]="form" (ngSubmit)="onSubmit()">
+    <mat-form-field>
+      <mat-label>Email</mat-label>
+      <input matInput formControlName="email" type="email" placeholder="Inserisci una email">
+      <mat-error *ngIf="form.get('email')?.hasError('required')">Email richiesta</mat-error>
+      <mat-error *ngIf="form.get('email')?.hasError('email')">Email invalida</mat-error>
+      <mat-error *ngIf="form.get('email')?.hasError('emailTaken')">Email già registrata</mat-error>
+    </mat-form-field>
+    <br><br>
+    <mat-form-field>
+      <mat-label>Nickname</mat-label>
+      <input matInput formControlName="nickname" type="text" placeholder="Inserisci un nickname">
+      <mat-error *ngIf="form.get('nickname')?.hasError('required')">Nickname richiesto</mat-error>
+      <mat-error *ngIf="form.get('nickname')?.hasError('minlength')">Nickname troppo corto</mat-error>
+      <mat-error *ngIf="form.get('nickname')?.hasError('maxlength')">Nickname troppo lungo</mat-error>
+    </mat-form-field>
+    <br><br>
+    <mat-form-field>
+      <mat-label>Password</mat-label>
+      <input matInput formControlName="password" type="password" placeholder="Inserisci una password">
+      <mat-error *ngIf="form.get('password')?.hasError('required')">Password richiesta</mat-error>
+      <mat-error *ngIf="form.get('password')?.hasError('minlength')">Password troppo corta</mat-error>
+    </mat-form-field>
+    <br><br>
+    <mat-form-field>
+      <mat-label>Conferma password</mat-label>
+      <input matInput formControlName="confirmPassword" type="password" placeholder="Conferma la password">
+      <mat-error *ngIf="form.get('confirmPassword')?.hasError('required')">Conferma la password</mat-error>
+      <mat-error *ngIf="form.get('confirmPassword')?.hasError('passwordMismatch')">Le password non coincidono</mat-error>
+    </mat-form-field>
+    <br>
+    <p><mat-checkbox formControlName="termsAndConditionsAccepted"></mat-checkbox><small>Ho letto e accetto i <a routerLink="/terms-and-conditions" style="color: #0066cc">T&C</a>.</small></p>
+    <br>
+    <button class="w3-button w3-round-large w3-green" style="outline: none; border: none;" type="submit" [disabled]="form.invalid">Registrati</button>
+</form>
+<br>
+<p>Hai già un account? <a routerLink="/login" style="color: #0066cc">Accedi</a>.</p><br>

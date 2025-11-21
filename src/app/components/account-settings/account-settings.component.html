@@ -1,0 +1,49 @@
+<div class="w3-display-container" style="height: 52px; width: 100%;">
+  <button class="w3-button w3-border w3-circle w3-display-bottomleft w3-white" style="height: 44px; width: 44px; margin-left: 8px;" (click)="goToGeneralSettings()"><span class="fas fa-angle-left w3-large"></span></button>
+</div>
+<h3 style="font-weight: bold;">Impostazioni account</h3><br>
+<div style="margin-left: -16px; margin-right: -16px; border-top: 1px solid lightgray; height: fit-content;">
+  <div class="w3-display-container" style="height: 50px; width: 100%;">
+    <span class="w3-display-left w3-padding-large" style="font-weight: bold; font-size: 14px;">I tuoi dati</span>
+  </div><br><br>
+  <form class="w3-display-container" [formGroup]="emailform" style="height: fit-content; width: 100%;">
+    <mat-form-field class="w3-display-left" style="margin-left: 16px;">
+      <mat-label>Email</mat-label>
+      <input matInput formControlName="email" type="email" placeholder="Inserisci una email">
+      <mat-error *ngIf="emailform.get('email')?.hasError('required')">Email richiesta</mat-error>
+      <mat-error *ngIf="emailform.get('email')?.hasError('email')">Email invalida</mat-error>
+      <mat-error *ngIf="emailform.get('email')?.hasError('emailTaken')">Email già registrata</mat-error>
+      <mat-error *ngIf="emailform.get('email')?.hasError('currentEmail')">Questa è già la tua email</mat-error>
+    </mat-form-field>
+    <button class="w3-button w3-round-large w3-green w3-display-right" style="outline: none; border: none; margin-right: 16px;" [style.display]="emailEnabled ? 'none' : 'block'" (click)="enableEmail()"><span class="fas fa-edit"></span>&nbsp;&nbsp;Modifica</button>
+    <button class="w3-button w3-round-large w3-green w3-display-right" style="outline: none; border: none; margin-right: 16px;" type="submit" [disabled]="emailform.invalid" [style.display]="!emailEnabled ? 'none' : 'block'" (click)="onEmailSubmit()">Aggiorna</button>
+  </form><br><br><br><br>
+  <form class="w3-display-container" [formGroup]="nicknameform" style="height: fit-content; width: 100%;">
+    <mat-form-field class="w3-display-left" style="margin-left: 16px;">
+      <mat-label>Nickname</mat-label>
+      <input matInput formControlName="nickname" type="text" placeholder="Inserisci un nickname">
+      <mat-error *ngIf="nicknameform.get('nickname')?.hasError('required')">Nickname richiesto</mat-error>
+      <mat-error *ngIf="nicknameform.get('nickname')?.hasError('minlength')">Nickname troppo corto</mat-error>
+      <mat-error *ngIf="nicknameform.get('nickname')?.hasError('maxlength')">Nickname troppo lungo</mat-error>
+    </mat-form-field>
+    <button class="w3-button w3-round-large w3-green w3-display-right" style="outline: none; border: none; margin-right: 16px;" [style.display]="nicknameEnabled ? 'none' : 'block'" (click)="enableNickname()"><span class="fas fa-edit"></span>&nbsp;&nbsp;Modifica</button>
+    <button class="w3-button w3-round-large w3-green w3-display-right" style="outline: none; border: none; margin-right: 16px;" type="submit" [disabled]="nicknameform.invalid" [style.display]="!nicknameEnabled ? 'none' : 'block'" (click)="onNicknameSubmit()">Aggiorna</button>
+  </form><br><br><br><br>
+  <form class="w3-display-container" [formGroup]="passwordform" style="height: fit-content; width: 100%;">
+    <mat-form-field class="w3-display-left" style="margin-left: 16px;">
+      <mat-label>Password</mat-label>
+      <input matInput formControlName="password" type="password" placeholder="Inserisci una password">
+      <mat-error *ngIf="passwordform.get('password')?.hasError('required')">Password richiesta</mat-error>
+      <mat-error *ngIf="passwordform.get('password')?.hasError('minlength')">Password troppo corta</mat-error>
+    </mat-form-field>
+    <button class="w3-button w3-round-large w3-green w3-display-right" style="outline: none; border: none; margin-right: 16px;" [style.display]="passwordEnabled ? 'none' : 'block'" (click)="enablePassword()"><span class="fas fa-edit"></span>&nbsp;&nbsp;Modifica</button>
+    <button class="w3-button w3-round-large w3-green w3-display-right" style="outline: none; border: none; margin-right: 16px;" type="submit" [disabled]="passwordform.invalid" [style.display]="!passwordEnabled ? 'none' : 'block'" (click)="onPasswordSubmit()">Aggiorna</button>
+  </form>
+</div><br><br>
+<div style="margin-left: -16px; margin-right: -16px; border-top: 1px solid lightgray; border-bottom: 1px solid lightgray; height: fit-content;">
+  <div class="w3-display-container" style="height: 50px; width: 100%;">
+    <span class="w3-display-left w3-padding-large" style="font-weight: bold; font-size: 14px;">Gestione account</span>
+  </div>
+  <button class="w3-button w3-round-large w3-danger" style="outline: none; border: none;" (click)="openDeleteAccountDialog()">Elimina il tuo account</button>
+  <br><br>
+</div>

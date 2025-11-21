@@ -1,0 +1,81 @@
+<div *ngIf="!locationAccessAllowed()">
+  <div class="w3-display-middle">
+    <h2>Oops!</h2>
+    <p>Per utilizzare questo servizio dovresti attivare la geolocalizzazione nelle <a routerLink="/general-settings" style="color: #0066cc">Impostazioni</a>.</p>
+  </div>
+</div>
+<div *ngIf="locationAccessAllowed()" style="margin-left: -16px; margin-right: -16px;">
+  <!-- map page -->
+  <div style="height: fit-content" [style.display]="currentSlideIndex === saved_locations.length ? 'none' : 'block'" [style.background-image]="backgroundImage">
+    <!-- weather header -->
+    <div class="w3-display-container" style="height: 170px;">
+      <div class="w3-container w3-display-topright w3-padding-small w3-white w3-border" style="margin-top: 10px; margin-right: 10px;">{{ label }}</div>
+      <div class="w3-container w3-display-bottomleft w3-padding-large"><img [src]="conditionIconurl" height="100" width="100"></div>
+      <div class="w3-container w3-display-right w3-center" style="width: 50vw;">
+        <span style="font-size: xx-large; color: black;">{{ temperature }}°C</span>
+      </div>
+      <div class="w3-display-container w3-display-bottomright" style="width: 50vw;">
+        <span class="w3-display-middle" style="font-size: small; color: black;">{{ conditionType }}</span><br><br><br>
+      </div>
+    </div>
+    <!-- controls -->
+    <div class="w3-display-container" style="height: 54px; margin: 0 0;" [style.display]="userLoggedIn()? 'block' : 'none'">
+      <button class="w3-button w3-border w3-circle w3-display-bottomleft w3-white" style="height: 44px; width: 44px; margin-left: 24px;" (click)="previousSlide()"><span class="fas fa-angle-left w3-large"></span></button>
+      <button class="w3-button w3-border w3-circle w3-display-bottomright w3-white" style="height: 44px; width: 44px; margin-right: 24px;" (click)="nextSlide()"><span class="fas fa-angle-right w3-large"></span></button>
+    </div>
+    <!-- map -->
+    <div class="w3-display-container" style="height: 87vw; width: 100%; margin-top: 14px; margin-bottom: 24px;" [style.display]="currentSlideIndex === saved_locations.length ? 'none' : 'block'">
+      <google-map *ngIf="center" #mapRef class="w3-display-middle w3-border" height="87vw" width="87vw" [center]="center" [zoom]="15" [options]="{ disableDefaultUI: true, gestureHandling: 'greedy' }" (mapClick)="onMapClick()">
+        <map-marker *ngFor="let marker of markers; let i = index" [position]="marker.position" [icon]="marker.type === 'fire' ? 'fire.png' : marker.type === 'water' ? 'water.png' : marker.type === 'air' ? 'air.png' : marker.type === 'ice' ? 'ice.png' : 'soil.png'" (mapClick)="openInfoWindow(i)">
+        </map-marker>
+        <map-marker *ngIf="currentSlideIndex !== saved_locations.length" [position]="watchPosition" [icon]="'blue-dot.png'"></map-marker>
+        <map-info-window>
+          <div *ngIf="selectedMarker" style="color: black; text-align: left;">
+            <em>{{ selectedMarker.made_by }}</em> segnala:
+            <h6 style="font-weight: bold;">{{ selectedMarker.title }}</h6>
+            <p>{{ selectedMarker.description }}</p>
+          </div>
+        </map-info-window>
+      </google-map>
+    </div>
+    <!-- alert button -->
+    <div style="height: 40px; margin: 0 auto;" [style.display]="userLoggedIn() && currentSlideIndex === -1? 'block' : 'none'">
+      <button class="w3-button w3-round-large w3-warning" style="outline: none; border: none; height: 40px; margin-right: 10px;" (click)="goToAlertForm()"><span class="fas fa-plus w3-large"></span>&nbsp;&nbsp;Segnala emergenza</button>
+    </div>
+    <br>
+  </div>
+  <!-- saved locations page -->
+  <div class="w3-container" style="height: fit-content" [style.display]="currentSlideIndex === saved_locations.length ? 'block' : 'none'">
+    <div class="w3-display-container" style="top: 224px; margin-left: 8px; margin-right: 8px;">
+      <button class="w3-button w3-border w3-circle w3-display-bottomleft w3-white" style="height: 44px; width: 44px;" (click)="previousSlide()"><span class="fas fa-angle-left w3-large"></span></button>
+      <button class="w3-button w3-border w3-circle w3-display-bottomright w3-white" style="height: 44px; width: 44px;" (click)="nextSlide()"><span class="fas fa-angle-right w3-large"></span></button>
+    </div>
+    <h3 style="font-weight: bold;">I miei luoghi</h3><br>
+    <strong>Aggiungi luogo</strong><br><br>
+    <form [formGroup]="form" (ngSubmit)="onSubmit()">
+      <mat-form-field>
+        <mat-label>Etichetta</mat-label>
+        <input matInput formControlName="label" type="text" placeholder="Inserisci un'etichetta">
+        <mat-error *ngIf="form.get('label')?.hasError('required')">Etichetta richiesta</mat-error>
+        <mat-error *ngIf="form.get('label')?.hasError('maxlength')">Etichetta troppo lunga</mat-error>
+      </mat-form-field>
+      <br><br>
+      <mat-form-field>
+        <mat-label>Indirizzo</mat-label>
+        <input #autocomplete matInput formControlName="address" type="text" placeholder="Inserisci un indirizzo">
+        <mat-error *ngIf="form.get('address')?.hasError('required')">Indirizzo richiesto</mat-error>
+      </mat-form-field>
+      <mat-form-field style="display: none;"><input matInput formControlName="lat" type="text"></mat-form-field>
+      <mat-form-field style="display: none;"><input matInput formControlName="lng" type="text"></mat-form-field>
+      <br><br>
+      <button class="w3-button w3-round-large w3-green" style="outline: none; border: none;" type="submit" [disabled]="form.invalid">Aggiungi</button>
+    </form><br><br>
+    <strong>Gestisci luoghi</strong><br><br>
+    <em *ngIf="saved_locations.length === 0">Non hai ancora nessun luogo salvato.</em>
+    <div *ngFor="let loc of saved_locations; let i = index;" class="w3-display-container" style="height: 50px; border-bottom: 1px solid lightgray; margin-left: 16px; margin-right: 16px;" [style.border-top]="i === 0 ? '1px solid lightgray' : 'none'">
+      <span class="w3-display-left w3-padding-large">{{ loc.label }}</span>
+      <span class="fas fa-trash-alt w3-large w3-display-right w3-padding-large" (click)="deleteSavedLocation(i)"></span>
+    </div>
+    <br><br>
+  </div>
+</div>
