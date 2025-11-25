@@ -41,8 +41,8 @@ export class LoginComponent {
         this.router.navigate(['/']);
       },
       error: err => {
-        if(err.message === 'Email non registrata') this.form.get('email')?.setErrors({ InvalidEmail: true });
-        else if(err.message === 'Password errata') this.form.get('password')?.setErrors({ InvalidPassword: true });
+        if(err.error === 'Email non registrata') this.form.get('email')?.setErrors({ InvalidEmail: true });
+        else if(err.error === 'Password errata') this.form.get('password')?.setErrors({ InvalidPassword: true });
         else this.status.setMessage('Errore di connessione', false);
       }
     });

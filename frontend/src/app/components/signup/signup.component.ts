@@ -56,7 +56,7 @@ export class SignupComponent {
         this.router.navigate(['/login']);
       },
       error: err => {
-        if(err.message === 'Email già registrata') this.form.get('email')?.setErrors({ emailTaken: true });
+        if(err.error === 'Email già registrata') this.form.get('email')?.setErrors({ emailTaken: true });
         else this.status.setMessage('Errore di connessione', false);
       }
     });
