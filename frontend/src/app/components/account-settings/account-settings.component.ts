@@ -95,7 +95,7 @@ export class AccountSettingsComponent implements OnInit {
         this.router.navigate(['/account-settings']);
       },
       error: err => {
-        if(err.message === 'Email già registrata') this.emailform.get('email')?.setErrors({ emailTaken: true });
+        if(err.error.message === 'Email già registrata') this.emailform.get('email')?.setErrors({ emailTaken: true });
         else this.status.setMessage('Errore di connessione', false);
       }
     })
