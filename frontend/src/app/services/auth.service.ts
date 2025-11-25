@@ -16,7 +16,7 @@ export class AuthService {
 
   loadToken() {
     const storedToken = localStorage.getItem('token');
-    if(storedToken) this.token = JSON.parse(storedToken);
+    if(storedToken) this.token = storedToken;
   }
 
   getToken() { return this.token; }
