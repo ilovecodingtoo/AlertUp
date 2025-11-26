@@ -54,7 +54,11 @@ export class AlertFormComponent implements OnInit, AfterViewInit, OnDestroy {
   ngOnInit() {
     if(this.locationAccessAllowed()){
       this.watchId = navigator.geolocation.watchPosition(
-        position => { this.center = { lat: position.coords.latitude, lng: position.coords.longitude }; },
+        position => {
+          this.center = { lat: position.coords.latitude, lng: position.coords.longitude };
+          this.form.get('lat')?.setValue(position.coords.latitude);
+          this.form.get('lng')?.setValue(position.coords.longitude);
+        },
         () => { this.status.setMessage('Posizione non disponibile', false); },
         { enableHighAccuracy: true, timeout: 10000, maximumAge: 60000 }
       );
@@ -84,9 +88,7 @@ export class AlertFormComponent implements OnInit, AfterViewInit, OnDestroy {
   }
   
   onSubmit() {
-    if(this.form.valid){
-      this.form.get('lat')?.setValue(this.center?.lat);
-      this.form.get('lng')?.setValue(this.center?.lng);
+    if(this.form.valid)
       this.auth.postAlert(this.form.value).subscribe({
         next: () => {
           this.status.setMessage('Segnalazione creata', true);
@@ -94,7 +96,6 @@ export class AlertFormComponent implements OnInit, AfterViewInit, OnDestroy {
         },
         error: () => { this.status.setMessage('Errore di connessione', false); }
       });
-    }
   }
 
   ngOnDestroy() { navigator.geolocation.clearWatch(this.watchId); }
