@@ -44,7 +44,9 @@ export class AlertFormComponent implements OnInit, AfterViewInit, OnDestroy {
       {
         title: ['', [Validators.required, Validators.maxLength(35)]],
         description: ['', [Validators.required]],
-        type: ['fire', [Validators.required]]
+        type: ['fire', [Validators.required]],
+        lat: [''],
+        lng: ['']
       }
     );
   }
@@ -82,13 +84,17 @@ export class AlertFormComponent implements OnInit, AfterViewInit, OnDestroy {
   }
   
   onSubmit() {
-    if(this.form.valid) this.auth.postAlert(this.form.value).subscribe({
-      next: () => {
-        this.status.setMessage('Segnalazione creata', true);
-        this.router.navigate(['/alert-form']);
-      },
-      error: () => { this.status.setMessage('Errore di connessione', false); }
-    });
+    if(this.form.valid){
+      this.form.get('lat')?.setValue(this.center?.lat);
+      this.form.get('lng')?.setValue(this.center?.lng);
+      this.auth.postAlert(this.form.value).subscribe({
+        next: () => {
+          this.status.setMessage('Segnalazione creata', true);
+          this.router.navigate(['/alert-form']);
+        },
+        error: () => { this.status.setMessage('Errore di connessione', false); }
+      });
+    }
   }
 
   ngOnDestroy() { navigator.geolocation.clearWatch(this.watchId); }

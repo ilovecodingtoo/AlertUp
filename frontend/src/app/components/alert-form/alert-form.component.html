@@ -44,6 +44,8 @@
       <textarea matInput formControlName="description" rows="4" placeholder="Descrivi in dettaglio l'emergenza e suggerisci come evitarla"></textarea>
       <mat-error *ngIf="form.get('description')?.hasError('required')">Descrizione richiesta</mat-error>
     </mat-form-field>
+    <mat-form-field style="display: none;"><input matInput formControlName="lat" type="text"></mat-form-field>
+    <mat-form-field style="display: none;"><input matInput formControlName="lng" type="text"></mat-form-field>
     <br><br>
     <div class="w3-display-container" style="height: 87vw; width: 100%;">
       <google-map class="w3-display-middle" *ngIf="center" #mapRef height="87vw" width="87vw" [center]="center" [zoom]="15" [options]="{ disableDefaultUI: true, gestureHandling: 'greedy' }" (mapClick)="onMapClick()">
