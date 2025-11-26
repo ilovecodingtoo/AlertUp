@@ -64,7 +64,7 @@ export class AuthService {
   }
 
   getUserInfo() {
-    return this.http.get<any[]>(`${this.baseApiUrl}/users`, {
+    return this.http.get<any>(`${this.baseApiUrl}/users`, {
       headers: new HttpHeaders({
         'Authorization': `Bearer ${this.token}`,
         'Cache-Control': 'no-cache'
