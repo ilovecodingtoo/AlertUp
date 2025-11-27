@@ -24,6 +24,7 @@
     "@capacitor/android": "^7.4.4",
     "@capacitor/cli": "^7.4.4",
     "@capacitor/core": "^7.4.4",
+    "@capacitor/push-notifications": "^7.0.3",
     "@capacitor/splash-screen": "^7.0.3",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0",
