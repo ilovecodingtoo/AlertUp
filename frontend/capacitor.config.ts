@@ -5,10 +5,13 @@ const config: CapacitorConfig = {
   appName: 'AlertUp',
   webDir: 'dist/frontend/browser',
   plugins: {
+    PushNotifications: {
+      presentationOptions: ["badge", "sound", "alert"],
+    },
     SplashScreen: {
       launchShowDuration: 3000,
       launchAutoHide: true,
-      backgroundColor: "#a03333ff",
+      backgroundColor: "#ffffffff",
       androidSplashResourceName: "splash",
       androidScaleType: "CENTER_CROP",
       showSpinner: true,
