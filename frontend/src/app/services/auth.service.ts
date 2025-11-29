@@ -32,18 +32,20 @@ export class AuthService {
     });
   }
 
-  login(email: string, password: string) {
-    return this.http.post(`${this.baseApiUrl}/login`, {}, {
+  login(data: any) {
+    return this.http.post(`${this.baseApiUrl}/login`, data, {
       headers: new HttpHeaders({
-        'Authorization': 'Basic ' + btoa(`${email}:${password}`),
         'Cache-Control': 'no-cache',
         'Content-Type':  'application/json'
       })
-    }).pipe(
+    })
+    .pipe(
       tap(
         (response: any) => {
-          this.token = response.token;
-          localStorage.setItem('token', this.token);
+          if(response.message === 'Utente Loggato'){
+            this.token = response.token;
+            localStorage.setItem('token', this.token);
+          }
         }
       )
     );

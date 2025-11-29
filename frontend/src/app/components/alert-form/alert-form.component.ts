@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit, AfterViewInit, OnDestroy, ViewChild, inject } from '@angular/core';
+import { Component, OnInit, AfterViewInit, ViewChild, inject } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -28,13 +28,12 @@ import { StatusService } from '../../services/status.service';
   templateUrl: './alert-form.component.html',
   styleUrl: './alert-form.component.css'
 })
-export class AlertFormComponent implements OnInit, AfterViewInit, OnDestroy {
+export class AlertFormComponent implements OnInit, AfterViewInit {
   readonly dialog = inject(MatDialog);
   form: FormGroup;
   showDisclaimer = true;
   made_by = '';
   center: any = null;
-  watchId = 0;
   isInfoWindowOpen = false;
   @ViewChild(MapInfoWindow) infoWindow!: MapInfoWindow | undefined;
   @ViewChild('newAlert') newAlert!: any;
@@ -53,7 +52,7 @@ export class AlertFormComponent implements OnInit, AfterViewInit, OnDestroy {
 
   ngOnInit() {
     if(this.locationAccessAllowed()){
-      this.watchId = navigator.geolocation.watchPosition(
+      navigator.geolocation.getCurrentPosition(
         position => {
           this.center = { lat: position.coords.latitude, lng: position.coords.longitude };
           this.form.get('lat')?.setValue(position.coords.latitude);
@@ -97,8 +96,6 @@ export class AlertFormComponent implements OnInit, AfterViewInit, OnDestroy {
         error: () => { this.status.setMessage('Errore di connessione', false); }
       });
   }
-
-  ngOnDestroy() { navigator.geolocation.clearWatch(this.watchId); }
 }
 
 

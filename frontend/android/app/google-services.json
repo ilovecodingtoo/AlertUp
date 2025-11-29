@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "857332694890",
+    "project_id": "alertup-d32c9",
+    "storage_bucket": "alertup-d32c9.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:857332694890:android:58be437fa16da123e3af13",
+        "android_client_info": {
+          "package_name": "com.example.alertup"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCTv_G8DIgkyP5lKnXvdomcaqC6UkUvdfM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

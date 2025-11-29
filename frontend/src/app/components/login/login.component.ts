@@ -7,6 +7,8 @@ import { CommonModule } from '@angular/common';
 import { AuthService } from '../../services/auth.service';
 import { Router, RouterLink } from '@angular/router';
 import { StatusService } from '../../services/status.service';
+import { HttpErrorResponse } from '@angular/common/http';
+
 
 @Component({
   selector: 'app-login',
@@ -35,16 +37,16 @@ export class LoginComponent {
   }
 
   onSubmit() {
-    if(this.form.valid) this.auth.login(this.form.get('email')?.value, this.form.get('password')?.value).subscribe({
-      next: () => {
-        this.status.setMessage('Accesso effettuato', true);
-        this.router.navigate(['/']);
+    if(this.form.valid) this.auth.login(this.form.value).subscribe({
+      next: (response: any) => {
+        if(response.message === 'Email non registrata') this.form.get('email')?.setErrors({ InvalidEmail: true });
+        else if(response.message === 'Password errata') this.form.get('password')?.setErrors({ InvalidPassword: true });
+        else{
+          this.status.setMessage('Accesso effettuato', true);
+          this.router.navigate(['/']);
+        }
       },
-      error: err => {
-        if(err.error?.message === 'Email non registrata') this.form.get('email')?.setErrors({ InvalidEmail: true });
-        else if(err.error?.message === 'Password errata') this.form.get('password')?.setErrors({ InvalidPassword: true });
-        else this.status.setMessage('Errore di connessione', false);
-      }
+      error: () => { this.status.setMessage('Errore di connessione', false); }
     });
   }
 }

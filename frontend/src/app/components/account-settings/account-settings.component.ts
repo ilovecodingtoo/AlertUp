@@ -90,14 +90,14 @@ export class AccountSettingsComponent implements OnInit {
 
   onEmailSubmit() {
     if(this.emailform.valid) this.auth.updateUserData(this.emailform.value).subscribe({
-      next: () => {
-        this.status.setMessage('Email aggiornata', true);
-        this.router.navigate(['/account-settings']);
+      next: (response: any) => {
+        if(response.message === 'Email già registrata') this.emailform.get('email')?.setErrors({ emailTaken: true });
+        else{
+          this.status.setMessage('Email aggiornata', true);
+          this.router.navigate(['/account-settings']);
+        }
       },
-      error: err => {
-        if(err.error.message === 'Email già registrata') this.emailform.get('email')?.setErrors({ emailTaken: true });
-        else this.status.setMessage('Errore di connessione', false);
-      }
+      error: () => { this.status.setMessage('Errore di connessione', false); }
     })
   }
 

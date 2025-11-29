@@ -51,14 +51,14 @@ export class SignupComponent {
 
   onSubmit() {
     if(this.form.valid) this.auth.signup(this.form.value).subscribe({
-      next: () => {
-        this.status.setMessage('Registrazione completata', true);
-        this.router.navigate(['/login']);
+      next: (response: any) => {
+        if(response.message === 'Email già registrata') this.form.get('email')?.setErrors({ emailTaken: true });
+        else{
+          this.status.setMessage('Registrazione completata', true);
+          this.router.navigate(['/login']);
+        }
       },
-      error: err => {
-        if(err.error?.message === 'Email già registrata') this.form.get('email')?.setErrors({ emailTaken: true });
-        else this.status.setMessage('Errore di connessione', false);
-      }
+      error: () => { this.status.setMessage('Errore di connessione', false); }
     });
   }
 }

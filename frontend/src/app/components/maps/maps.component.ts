@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, ViewChild, ViewChildren, QueryList, AfterViewInit } from '@angular/core';
+import { Component, OnInit, ViewChild, ViewChildren, QueryList, AfterViewInit } from '@angular/core';
 import { AuthService } from '../../services/auth.service';
 import { CommonModule } from '@angular/common';
 import { LocationService } from '../../services/location.service';
@@ -18,7 +18,7 @@ declare const google: any;
   templateUrl: './maps.component.html',
   styleUrl: './maps.component.css'
 })
-export class MapsComponent implements OnInit, AfterViewInit, OnDestroy {
+export class MapsComponent implements OnInit, AfterViewInit {
   currentSlideIndex = -1;
   saved_locations: any[] = [];
   form: FormGroup;
@@ -30,8 +30,7 @@ export class MapsComponent implements OnInit, AfterViewInit, OnDestroy {
   temperature = 0;
 
   center: any = null;
-  watchId = 0;
-  watchPosition: any = null;
+  currentPosition: any = null;
   markers: any[] = [];
   selectedMarker: any = null;
   isInfoWindowOpen = false;
@@ -54,9 +53,9 @@ export class MapsComponent implements OnInit, AfterViewInit, OnDestroy {
   ngOnInit() {
     if(this.locationAccessAllowed()){
       this.getAllMarkers();
-      this.watchId = navigator.geolocation.watchPosition(
+      navigator.geolocation.getCurrentPosition(
         position => {
-          this.watchPosition = { lat: position.coords.latitude, lng: position.coords.longitude };
+          this.currentPosition = { lat: position.coords.latitude, lng: position.coords.longitude };
           this.getCurrentSlideData();
         },
         () => { this.status.setMessage('Posizione non disponibile', false); },
@@ -117,7 +116,7 @@ export class MapsComponent implements OnInit, AfterViewInit, OnDestroy {
       return;
     }
     else if(this.currentSlideIndex === -1){
-      this.center = this.watchPosition;
+      this.center = this.currentPosition;
       this.selectedMarker = null;
       this.label = 'Posizione attuale';
       this.getWeather();
@@ -201,6 +200,4 @@ export class MapsComponent implements OnInit, AfterViewInit, OnDestroy {
       error: () => { this.status.setMessage('Errore di connessione', false); }
     });
   }
-
-  ngOnDestroy() { navigator.geolocation.clearWatch(this.watchId); }
 }
