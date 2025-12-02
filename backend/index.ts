@@ -12,6 +12,13 @@ import { expressjwt as jwt } from 'express-jwt';
 
 
 
+const admin = require('firebase-admin');
+const serviceAccount = require('./firebase/serviceAccountKey.json');
+admin.initializeApp({ credential: admin.credential.cert(serviceAccount) });
+
+
+
+
 const app = express(); //Creazione server con express
 
 let auth = jwt({ secret: 'mysecretpassword', algorithms: ['HS256'] });
@@ -21,6 +28,21 @@ app.use(cors());
 app.use(express.json());
 
 
+
+
+app.post('/push', auth, async (req, res, next) => {
+  const pushToken = req.body.pushToken;
+  await User.findByIdAndUpdate((req as any).auth._id, { fcm_token: pushToken.value });
+  const response = await admin.messaging().send({ token: pushToken.value, notification: { title: 'ciao', body: 'sono una notifica' } });
+  console.log('notifica inviata', response);
+  return res.status(200).json({message: 'FCM token aggiunto'});
+});
+
+
+app.delete('/push', auth, async (req, res, next) => {
+  await User.findByIdAndUpdate((req as any).auth._id, { fcm_token: '' });
+  return res.status(200).json({message: 'FCM token rimosso'});
+});
 
 
 app.get('/alerts', async (req, res, next) => {

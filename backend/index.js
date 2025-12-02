@@ -45,10 +45,40 @@ var mongoose_1 = require("mongoose");
 var User_1 = require("./models/User");
 var Alert_1 = require("./models/Alert");
 var express_jwt_1 = require("express-jwt");
+var admin = require('firebase-admin');
+var serviceAccount = require('./firebase/serviceAccountKey.json');
+admin.initializeApp({ credential: admin.credential.cert(serviceAccount) });
 var app = express(); //Creazione server con express
 var auth = (0, express_jwt_1.expressjwt)({ secret: 'mysecretpassword', algorithms: ['HS256'] });
 app.use(cors());
 app.use(express.json());
+app.post('/push', auth, function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
+    var pushToken, response;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0:
+                pushToken = req.body.pushToken;
+                return [4 /*yield*/, User_1.default.findByIdAndUpdate(req.auth._id, { fcm_token: pushToken.value })];
+            case 1:
+                _a.sent();
+                return [4 /*yield*/, admin.messaging().send({ token: pushToken.value, notification: { title: 'ciao', body: 'sono una notifica' } })];
+            case 2:
+                response = _a.sent();
+                console.log('notifica inviata', response);
+                return [2 /*return*/, res.status(200).json({ message: 'FCM token aggiunto' })];
+        }
+    });
+}); });
+app.delete('/push', auth, function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0: return [4 /*yield*/, User_1.default.findByIdAndUpdate(req.auth._id, { fcm_token: '' })];
+            case 1:
+                _a.sent();
+                return [2 /*return*/, res.status(200).json({ message: 'FCM token rimosso' })];
+        }
+    });
+}); });
 app.get('/alerts', function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
     return __generator(this, function (_a) {
         Alert_1.default.find({})

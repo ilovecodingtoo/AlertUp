@@ -1,7 +1,6 @@
 import { Component, ViewChild } from '@angular/core';
 import { AuthService } from '../../services/auth.service';
 import { LocationService } from '../../services/location.service';
-import { PushService } from '../../services/push.service';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
@@ -18,7 +17,7 @@ export class GeneralSettingsComponent {
   @ViewChild('locationToggle') locationToggle: any;
   @ViewChild('pushToggle') pushToggle: any;
 
-  constructor(public location: LocationService, private auth: AuthService, public push: PushService, private router: Router, public status: StatusService) {}
+  constructor(public location: LocationService, public auth: AuthService, private router: Router, public status: StatusService) {}
 
   userLoggedIn() { return this.auth.userLoggedIn(); }
 
@@ -30,7 +29,7 @@ export class GeneralSettingsComponent {
     if (this.location.locationAccessAllowed) {
       this.location.locationAccessAllowed = false;
       localStorage.setItem('locationAccessAllowed', JSON.stringify(false));
-      this.pushToggle.checked = false;
+      this.locationToggle.checked = false;
     } else {
       if (navigator.geolocation)
         navigator.geolocation.getCurrentPosition(
@@ -47,5 +46,5 @@ export class GeneralSettingsComponent {
     }
   }
 
-  togglePushNotifications() { this.push.togglepushNotifications(); }
+  togglePushNotifications() { if(!this.auth.togglepushNotifications()) this.pushToggle.checked = false; }
 }

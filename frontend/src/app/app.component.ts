@@ -4,7 +4,6 @@ import { AuthService } from './services/auth.service';
 import { CommonModule } from '@angular/common';
 import { LocationService } from './services/location.service';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
-import { PushService } from './services/push.service';
 import { StatusService } from './services/status.service';
 
 
@@ -22,7 +21,7 @@ export class AppComponent implements OnInit {
   termsAccepted = false;
   readonly dialog = inject(MatDialog);
 
-  constructor(private router: Router, private auth: AuthService, private location: LocationService, private push: PushService, public status: StatusService) {}
+  constructor(private router: Router, private auth: AuthService, private location: LocationService, public status: StatusService) {}
 
   ngOnInit() {
     this.loadOnboardingStatus();
@@ -30,7 +29,7 @@ export class AppComponent implements OnInit {
     this.loadTheme();
     this.auth.loadToken();
     this.location.loadLocationAccessPermission();
-    this.push.loadLPushNotificationsPermission();
+    this.auth.loadPushNotificationsPermission();
     if(this.onboardingCompleted && !this.termsAccepted) this.openDialog();
   }
 
