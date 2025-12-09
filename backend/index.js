@@ -53,7 +53,7 @@ var auth = (0, express_jwt_1.expressjwt)({ secret: 'mysecretpassword', algorithm
 app.use(cors());
 app.use(express.json());
 app.post('/push', auth, function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
-    var pushToken, response;
+    var pushToken;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
@@ -61,10 +61,6 @@ app.post('/push', auth, function (req, res, next) { return __awaiter(void 0, voi
                 return [4 /*yield*/, User_1.default.findByIdAndUpdate(req.auth._id, { fcm_token: pushToken.value })];
             case 1:
                 _a.sent();
-                return [4 /*yield*/, admin.messaging().send({ token: pushToken.value, notification: { title: 'ciao', body: 'sono una notifica' } })];
-            case 2:
-                response = _a.sent();
-                console.log('notifica inviata', response);
                 return [2 /*return*/, res.status(200).json({ message: 'FCM token aggiunto' })];
         }
     });
@@ -87,6 +83,11 @@ app.get('/alerts', function (req, res, next) { return __awaiter(void 0, void 0, 
         return [2 /*return*/];
     });
 }); });
+function isWithinRay(lat1, lon1, lat2, lon2) {
+    var deltaLat = Math.abs(lat1 - lat2) * 111;
+    var deltaLon = Math.abs(lon1 - lon2) * Math.cos(lat1 * Math.PI / 180) * 111;
+    return (Math.sqrt(deltaLat * deltaLat + deltaLon * deltaLon) <= 2.5);
+}
 app.post('/alerts', auth, function (req, res, next) {
     var title = req.body.title;
     var description = req.body.description;
@@ -94,9 +95,10 @@ app.post('/alerts', auth, function (req, res, next) {
     var lat = parseFloat(req.body.lat);
     var lng = parseFloat(req.body.lng);
     var position = { lat: lat, lng: lng };
+    var made_by = '';
     User_1.default.findById(req.auth._id)
         .then(function (user) {
-        var made_by = user === null || user === void 0 ? void 0 : user.nickname;
+        made_by = user === null || user === void 0 ? void 0 : user.nickname;
         var user_email = user === null || user === void 0 ? void 0 : user.email;
         return Alert_1.default.create({ title: title, description: description, type: type, position: position, made_by: made_by, user_email: user_email });
     })
@@ -128,6 +130,46 @@ app.post('/alerts', auth, function (req, res, next) {
                 }
             });
         }); }, 86400000);
+        try {
+            (function () { return __awaiter(void 0, void 0, void 0, function () {
+                var usrs, _i, usrs_1, usr, _a, _b, loc, response;
+                var _c, _d;
+                return __generator(this, function (_e) {
+                    switch (_e.label) {
+                        case 0: return [4 /*yield*/, User_1.default.find({})];
+                        case 1:
+                            usrs = _e.sent();
+                            _i = 0, usrs_1 = usrs;
+                            _e.label = 2;
+                        case 2:
+                            if (!(_i < usrs_1.length)) return [3 /*break*/, 7];
+                            usr = usrs_1[_i];
+                            if (!usr.fcm_token) return [3 /*break*/, 6];
+                            _a = 0, _b = usr.saved_locations;
+                            _e.label = 3;
+                        case 3:
+                            if (!(_a < _b.length)) return [3 /*break*/, 6];
+                            loc = _b[_a];
+                            if (!isWithinRay(lat, lng, ((_c = loc.position) === null || _c === void 0 ? void 0 : _c.lat) || 0, ((_d = loc.position) === null || _d === void 0 ? void 0 : _d.lng) || 0)) return [3 /*break*/, 5];
+                            return [4 /*yield*/, admin.messaging().send({ token: usr.fcm_token, notification: { title: 'Nuova emergenza!', body: "".concat(made_by, " segnala ").concat(title, " vicino a ").concat(loc.label) } })];
+                        case 4:
+                            response = _e.sent();
+                            console.log('notifica inviata', response);
+                            _e.label = 5;
+                        case 5:
+                            _a++;
+                            return [3 /*break*/, 3];
+                        case 6:
+                            _i++;
+                            return [3 /*break*/, 2];
+                        case 7: return [2 /*return*/];
+                    }
+                });
+            }); })();
+        }
+        catch (err) {
+            console.log("errore durante l'invio delle notifiche per nuovo alert");
+        }
         return res.status(200).json({ message: "Segnalazione creata" });
     })
         .catch(function (err) {

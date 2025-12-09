@@ -33,8 +33,6 @@ app.use(express.json());
 app.post('/push', auth, async (req, res, next) => {
   const pushToken = req.body.pushToken;
   await User.findByIdAndUpdate((req as any).auth._id, { fcm_token: pushToken.value });
-  const response = await admin.messaging().send({ token: pushToken.value, notification: { title: 'ciao', body: 'sono una notifica' } });
-  console.log('notifica inviata', response);
   return res.status(200).json({message: 'FCM token aggiunto'});
 });
 
@@ -52,6 +50,13 @@ app.get('/alerts', async (req, res, next) => {
 });
 
 
+function isWithinRay(lat1: number, lon1: number, lat2: number, lon2: number) {
+    const deltaLat = Math.abs(lat1 - lat2) * 111;
+    const deltaLon = Math.abs(lon1 - lon2) * Math.cos(lat1 * Math.PI / 180) * 111;
+    return (Math.sqrt(deltaLat * deltaLat + deltaLon * deltaLon) <= 2.5);
+}
+
+
 app.post('/alerts', auth, (req, res, next) => {
   const title = req.body.title;
   const description = req.body.description;
@@ -59,9 +64,10 @@ app.post('/alerts', auth, (req, res, next) => {
   const lat = parseFloat(req.body.lat);
   const lng = parseFloat(req.body.lng);
   let position = { lat: lat, lng: lng };
+  let made_by: any = '';
   User.findById((req as any).auth._id)
   .then((user) => {
-    let made_by = user?.nickname;
+    made_by = user?.nickname;
     let user_email = user?.email;
     return Alert.create({ title: title, description: description, type: type, position: position, made_by: made_by, user_email: user_email })
   })
@@ -76,6 +82,19 @@ app.post('/alerts', auth, (req, res, next) => {
       }
       catch(err){ console.log("Errore durante l'eliminazione di un alert"); }
     }, 86400000);
+    try{
+      (async () => {
+        let usrs = await User.find({});
+        for(let usr of usrs)
+          if(usr.fcm_token)
+            for(let loc of usr.saved_locations)
+              if(isWithinRay(lat, lng, loc.position?.lat || 0, loc.position?.lng || 0)){
+                const response = await admin.messaging().send({ token: usr.fcm_token, notification: { title: 'Nuova emergenza!', body: `${made_by} segnala ${title} vicino a ${loc.label}` } });
+                console.log('notifica inviata', response);
+              }
+      })();
+    }
+    catch(err){ console.log("errore durante l'invio delle notifiche per nuovo alert"); }
     return res.status(200).json({message:"Segnalazione creata"})
   })
   .catch((err)=>{

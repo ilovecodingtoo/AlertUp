@@ -26,9 +26,9 @@
     <!-- map -->
     <div class="w3-display-container" style="height: 87vw; width: 100%; margin-top: 14px; margin-bottom: 24px;" [style.display]="currentSlideIndex === saved_locations.length ? 'none' : 'block'">
       <google-map *ngIf="center" #mapRef class="w3-display-middle w3-border" height="87vw" width="87vw" [center]="center" [zoom]="15" [options]="{ disableDefaultUI: true, gestureHandling: 'greedy' }" (mapClick)="onMapClick()">
+        <map-marker [position]="currentPosition" [icon]="'blue-dot.png'"></map-marker>
         <map-marker *ngFor="let marker of markers; let i = index" [position]="marker.position" [icon]="marker.type === 'fire' ? 'fire.png' : marker.type === 'water' ? 'water.png' : marker.type === 'air' ? 'air.png' : marker.type === 'ice' ? 'ice.png' : 'soil.png'" (mapClick)="openInfoWindow(i)">
         </map-marker>
-        <map-marker *ngIf="currentSlideIndex !== saved_locations.length" [position]="currentPosition" [icon]="'blue-dot.png'"></map-marker>
         <map-info-window>
           <div *ngIf="selectedMarker" style="color: black; text-align: left;">
             <em>{{ selectedMarker.made_by }}</em> segnala:

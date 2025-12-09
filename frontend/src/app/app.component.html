@@ -20,10 +20,11 @@
   <button *ngIf="currentOnboardingIndex === 2" class="w3-button w3-border w3-round-large w3-display-bottomright w3-white w3-padding-large" style="margin-right: 32px; margin-bottom: 64px;" (click)="completeOnboarding()">Inizia</button>
 </div>
 <div *ngIf="onboardingCompleted">
-<!-- sidebar -->
+  
+  <!-- sidebar -->
   <div class="w3-sidebar w3-bar-block w3-animate-left" [class]="darkModeOn ? 'w3-black' : 'w3-light-gray'" style="width: 75%; z-index: 1001;" [style.display]="sidebarOpen ? 'block' : 'none'">
-    <div class="w3-container" style="height: 60px;">
-      <div class="w3-container w3-padding-small w3-display-topright" style="height: 60px;">
+    <div class="w3-display-container" style="height: 100px;">
+      <div class="w3-container w3-padding-small w3-display-bottomright" style="height: 52px;">
         <button class="w3-button w3-circle" style="height: 52px; width: 52px;" (click)="toggleSidebar()"><span class="fas fa-times w3-xlarge"></span></button>
       </div>
     </div>
@@ -33,37 +34,40 @@
     <div *ngIf="userLoggedIn()" class="w3-bar-item w3-button" (click)="goToLogout()"><span class="fas fa-sign-out-alt w3-medium w3-margin-right"></span> Esci</div>
     <div class="w3-bar-item w3-button" (click)="goToAboutUs()"><span class="fas fa-question-circle w3-medium w3-margin-right"></span> Chi siamo</div>
     <div class="w3-container" style="height: 60px;">
-      <div class="w3-container w3-padding-small w3-display-bottomleft" style="height: 60px;">
+      <div class="w3-container w3-padding-small w3-display-bottomleft" style="height: 60px; margin-bottom: 4px;">
         <button class="w3-button w3-circle" style="height: 52px; width: 52px;" (click)="goToGeneralSettings()"><span class="fas fa-cog w3-xlarge"></span></button>
       </div>
     </div>
     <div class="w3-container" style="height: 60px;">
-      <div class="w3-container w3-padding-small w3-display-bottomright" style="height: 60px;">
+      <div class="w3-container w3-padding-small w3-display-bottomright" style="height: 60px; margin-bottom: 4px;">
         <button class="w3-button w3-circle" style="height: 52px; width: 52px;" (click)="toggleTheme()"><span class="fas fa-adjust w3-xlarge"></span></button>
       </div>
     </div>
   </div>
 
   <!-- global header -->
-  <div class="w3-container w3-padding-small" [ngClass]="{ 'w3-black': darkModeOn, 'w3-light-gray': !darkModeOn, 'w3-opacity-max': sidebarOpen }" style="position: fixed; z-index: 1000; height: 60px; width: 100%;">
-    <div class="w3-container w3-padding-small w3-display-left" style="height: 60px;">
+  <div class="w3-display-container w3-padding-small" [ngClass]="{ 'w3-black': darkModeOn, 'w3-light-gray': !darkModeOn, 'w3-opacity-max': sidebarOpen }" style="position: fixed; z-index: 1000; height: 100px; width: 100%;">
+    <div class="w3-container w3-padding-small w3-display-bottomleft" style="height: 52px;">
       <button class="w3-button w3-circle" style="height: 52px; width: 52px;" (click)="toggleSidebar()"><span class="fas fa-bars w3-xlarge"></span></button>
     </div>
-    <div class="w3-container w3-padding-large w3-display-middle" style="height: 60px;">
-      <img src="logo.png" height="36" width="36">
+    <div class="w3-dislay-container w3-padding-large w3-display-bottommiddle" style="height: 52px;">
+      <img class="w3-display-middle" src="logo.png" height="36" width="36">
     </div>
   </div>
 
   <!-- main content -->
-  <div [ngClass]="{ 'w3-asphalt': darkModeOn, 'w3-white': !darkModeOn, 'w3-opacity-max': sidebarOpen }" style="display: flex; flex-direction: column; min-height: 100vh; padding-top: 60px;">
-    <main class="w3-container w3-center" style="flex: 1;">
-      <router-outlet></router-outlet>
-    </main>
-    <footer class="w3-container w3-center">
-      <span style="font-size: 10px;">© 2025 AlertUp - Tutti i diritti riservati</span>
-    </footer>
+  <div [ngClass]="{ 'w3-asphalt': darkModeOn, 'w3-white': !darkModeOn, 'w3-opacity-max': sidebarOpen }" style="display: flex; flex-direction: column; height: calc(100vh - 100px); position: fixed; top: 100px; left: 0; right: 0; bottom: 0;">
+    <div style="flex: 1; overflow-y: auto; display: flex; flex-direction: column;">
+      <main class="w3-container w3-center" style="flex: 1;">
+        <router-outlet></router-outlet>
+      </main>
+      <footer class="w3-container w3-center" style="padding: 16px 0;">
+        <span style="font-size: 10px;">© 2025 AlertUp - Tutti i diritti riservati</span>
+      </footer>
+    </div>
   </div>
 
   <!-- status message -->
   <div *ngIf="status.message !== ''" class="w3-container w3-center w3-padding-small w3-animate-opacity" [ngClass]="{ 'w3-success': status.success, 'w3-danger': !status.success }" style="position: fixed; top: 85vh; left: 50%; transform: translateX(-50%); z-index: 2000; width: 50vw;">{{ status.message }}</div>
+
 </div>
