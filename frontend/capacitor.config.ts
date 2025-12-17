@@ -3,7 +3,7 @@ import type { CapacitorConfig } from '@capacitor/cli';
 const config: CapacitorConfig = {
   appId: 'com.example.alertup',
   appName: 'AlertUp',
-  webDir: 'dist/frontend',
+  webDir: 'dist/frontend/browser',
   plugins: {
     CapacitorHttp: {
       enabled: true
