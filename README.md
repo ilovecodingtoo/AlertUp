@@ -1,3 +1,25 @@
+## Stato di avanzamento del progetto
+
+Lo sviluppo dell’applicazione è in fase avanzata.  
+Attualmente risultano implementate tutte le funzionalità core previste dal Documento dei Requisiti:
+
+- Registrazione e autenticazione utenti
+- Gestione del profilo
+- Visualizzazione delle emergenze tramite mappa
+- Creazione e consultazione del dettaglio emergenza
+- Sistema di notifiche
+- Integrazione meteo e collegamenti a servizi esterni
+
+Le attività ancora in corso riguardano principalmente:
+
+- Test funzionali e di integrazione
+- Verifica dei requisiti non funzionali
+- Rifiniture minori dell’interfaccia utente
+
+Il codice è stabile e l’applicazione risulta utilizzabile in tutte le sue parti principali.
+
+---
+
 ## Avvio rapido del progetto
 
 1. Creare un file `.sh`, ad esempio `deploy.sh`:
