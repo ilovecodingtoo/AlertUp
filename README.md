@@ -20,6 +20,25 @@ Il codice è stabile e l’applicazione risulta utilizzabile in tutte le sue par
 
 ---
 
+# controllare se MongoDB server sta runnando
+sc query MongoDB
+
+# build backend
+tsc index.ts
+
+# start backend
+node index
+
+# build frontend
+ng build
+
+# aggiorna capacitor
+npx cap sync
+
+# apri Android Studio
+npx cap open android
+
+
 ## Avvio rapido del progetto
 
 Apri il terminale e digita:
@@ -53,20 +72,3 @@ $ adb reverse tcp:3000 tcp:3000
 $ chmod +x deploy.sh
 $ ./deploy.sh
 
----
-# controllare se MongoDB server sta runnando
-sc query MongoDB
-
-# build backend
-tsc index.ts
-# start backend
-node index
-
-# build frontend
-ng build
-
-# aggiorna capacitor
-npx cap sync
-
-# apri Android Studio
-npx cap open android
