@@ -199,6 +199,7 @@ This project is licensed under the **MIT License**.
 **What this means:** You are free to use, copy, modify, and distribute this software for academic or commercial purposes, provided that the original copyright notice and this permission notice are included in all copies or substantial portions of the software.
 
 See the [LICENSE](LICENSE) file for the full legal text.
+
 ---
 
 ## Disclaimer
