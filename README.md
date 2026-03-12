@@ -96,8 +96,6 @@ To run the project locally you typically need:
 - A Firebase service account JSON for backend push notifications:
   - `backend/firebase/serviceAccountKey.json` (not recommended to commit publicly)
 
-> Note: the current repository includes `backend/node_modules/` (unusual for Git). Cloning may be heavier than expected.
-
 ---
 
 ## Quick start (development)
